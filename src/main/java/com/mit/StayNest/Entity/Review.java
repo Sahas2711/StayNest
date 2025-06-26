@@ -79,9 +79,6 @@ public class Review {
 		return "Review [id=" + id + ", rating=" + rating + ", feedback=" + feedback + ", createdAt=" + createdAt + "]";
 	}
     
-    @PrePersist
-    public void onCreate() {
-    	createdAt = LocalDateTime.now();
-    }
+
 }
 
