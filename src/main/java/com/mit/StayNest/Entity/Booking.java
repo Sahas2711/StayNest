@@ -30,13 +30,8 @@ public class Booking {
     @Column(name = "end_date")
     private Date endDate; 
 
-<<<<<<< HEAD
-    @Column(nullable = false)
-    private String status; 
-=======
     @Column
     private String status; // BOOKED or CANCELLED
->>>>>>> branch 'main' of https://github.com/Sahas2711/StayNest.git
 
     public Booking() {
         super();
