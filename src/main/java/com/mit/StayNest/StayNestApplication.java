@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class StayNestApplication {
 
 	public static void main(String[] args) {
+		System.out.println("hello sahas");
+		
 		SpringApplication.run(StayNestApplication.class, args);
 	}
 
