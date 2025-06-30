@@ -30,7 +30,7 @@ public class Booking {
     @Column(name = "end_date")
     private Date endDate; // Booking end date
 
-    @Column(nullable = false)
+    @Column
     private String status; // BOOKED or CANCELLED
 
     // Default constructor
