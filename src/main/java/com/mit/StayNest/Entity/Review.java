@@ -22,9 +22,10 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "listing_id")
     private Listing listing;
-    private int rating; 
+    private Long rating; 
     private String feedback;
     private LocalDateTime createdAt;
+    
 	public Long getId() {
 		return id;
 	}
@@ -43,10 +44,10 @@ public class Review {
 	public void setListing(Listing listing) {
 		this.listing = listing;
 	}
-	public int getRating() {
+	public Long getRating() {
 		return rating;
 	}
-	public void setRating(int rating) {
+	public void setRating(Long rating) {
 		this.rating = rating;
 	}
 	public String getFeedback() {
@@ -65,7 +66,7 @@ public class Review {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Review(Long id, User tenant, Listing listing, int rating, String feedback, LocalDateTime createdAt) {
+	public Review(Long id, User tenant,Listing listing, Long rating, String feedback, LocalDateTime createdAt) {
 		super();
 		this.id = id;
 		this.tenant = tenant;
