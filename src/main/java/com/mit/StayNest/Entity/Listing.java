@@ -1,6 +1,6 @@
 package com.mit.StayNest.Entity;
 
-import jakarta.persistence.Column;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -12,24 +12,22 @@ import jakarta.persistence.Table;
 public class Listing {
 
     @Id
-    private Long id; // Listing ID
+    private Long id; 
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
-    private User owner; // Reference to User (Owner)
+    private User owner; 
 
-    private String title; // PG or Hostel name
+    private String title;
 
-    private String address; // Location
+    private String address; 
 
-    private Double rent; // Monthly rent
+    private Double rent; 
 
-    // Default constructor
     public Listing() {
         super();
     }
 
-    // Parameterized constructor
     public Listing(Long id, User owner, String title, String address, Double rent) {
         super();
         this.id = id;
@@ -39,7 +37,7 @@ public class Listing {
         this.rent = rent;
     }
 
-    // Getters and setters
+ 
 
     public Long getId() {
         return id;
@@ -81,7 +79,7 @@ public class Listing {
         this.rent = rent;
     }
 
-    // toString method
+
     @Override
     public String toString() {
         return "Listing [id=" + id 

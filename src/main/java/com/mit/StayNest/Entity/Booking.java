@@ -14,31 +14,29 @@ import jakarta.persistence.Table;
 public class Booking {
 
     @Id 
-    private Long id; // Booking ID
+    private Long id; 
 
     @ManyToOne
     @JoinColumn(name = "tenant_id")
-    private User tenant; // Reference to User (Tenant)
+    private User tenant; 
 
     @ManyToOne
     @JoinColumn(name = "listing_id")
-    private Listing listing; // Reference to Listing
+    private Listing listing; 
 
     @Column(name = "start_date")
-    private Date startDate; // Booking start date
+    private Date startDate; 
 
     @Column(name = "end_date")
-    private Date endDate; // Booking end date
+    private Date endDate; 
 
     @Column(nullable = false)
-    private String status; // BOOKED or CANCELLED
+    private String status; 
 
-    // Default constructor
     public Booking() {
         super();
     }
 
-    // Parameterized constructor
     public Booking(Long id, User tenant, Listing listing, Date startDate, Date endDate, String status) {
         super();
         this.id = id;
@@ -49,7 +47,6 @@ public class Booking {
         this.status = status;
     }
 
-    // Getters and setters
 
     public Long getId() {
         return id;
@@ -99,7 +96,6 @@ public class Booking {
         this.status = status;
     }
 
-    // toString method
     @Override
     public String toString() {
         return "Booking [id=" + id + ", tenant=" + (tenant != null ? tenant.getId() : null)

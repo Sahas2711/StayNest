@@ -1,6 +1,7 @@
 package com.mit.StayNest.Services;
 
 import java.util.List;
+
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,22 +23,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(User user) {
-        // Optional: Check if user already exists (e.g. by email)
+    	if(user.getEmail() == null || user.getPassword() == null) throw new RuntimeException("Credentials not found");
+        
         Optional<User> existingUser = userRepo.findByEmail(user.getEmail());
         if (existingUser.isPresent()) {
             throw new RuntimeException("User already exists with email: " + user.getEmail());
         }
-
-        // Save user to DB
+   
         return userRepo.save(user);
     }
 
     @Override
     public User login(User user) {
+    	if(user.getEmail() == null || user.getPassword() == null) throw new RuntimeException("Credentials not found");
         Optional<User> existingUser = userRepo.findByEmail(user.getEmail());
 
         if (existingUser.isPresent() && existingUser.get().getPassword().equals(user.getPassword())) {
-            return existingUser.get(); // Login success
+            return existingUser.get(); 
         }
 
         throw new RuntimeException("Invalid email or password");

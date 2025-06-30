@@ -9,5 +9,4 @@ public class StayNestApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(StayNestApplication.class, args);
 	}
-
 }
