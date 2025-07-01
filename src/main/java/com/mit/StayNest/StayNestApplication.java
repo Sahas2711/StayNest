@@ -7,11 +7,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class StayNestApplication {
 
 	public static void main(String[] args) {
-<<<<<<< HEAD
+
 		System.out.println("Hello World");
-=======
+
 		
->>>>>>> branch 'main' of https://github.com/Sahas2711/StayNest.git
+
 		SpringApplication.run(StayNestApplication.class, args);
 	}
 }
