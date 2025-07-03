@@ -17,16 +17,16 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;  // Unique user ID (auto-generated)
+    private Long id;  
 
     @Column(nullable = false, unique = true)
-    private String email;  // User's email (used for login)
+    private String email;  
 
     @Column(nullable = false)
-    private String password;  // User password (should be stored hashed)
+    private String password;  
 
     @Column(nullable = false)
-    private String name;  // Full name of the user
+    private String name; 
 
     @Column(nullable = false)
     private String role;  // Role of user: "TENANT" or "OWNER"
@@ -34,12 +34,12 @@ public class User {
     @Column(nullable = true)
     private String phoneNumber;  // Optional contact number
 
-    // Default constructor
+    
     public User() {
         super();
     }
 
-    // Parameterized constructor
+
     public User(Long id, String email, String password, String name, String role, String phoneNumber) {
         this.id = id;
         this.email = email;
@@ -49,7 +49,7 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    // Getters and setters for all fields
+    
 
     public Long getId() {
         return id;
