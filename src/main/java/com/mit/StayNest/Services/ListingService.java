@@ -17,6 +17,17 @@ public interface ListingService {
 	
 	public Listing deleteListing(Listing listing);
 	
+<<<<<<< HEAD
 	
+=======
+
+	public Listing getSpecificListing(Long id);
+
+
+	public List<Listing> getListingByOwnerId(long ownerId);
+
+	public List<Listing> searchByArea(String area);
+>>>>>>> branch 'main' of https://github.com/Sahas2711/StayNest.git
 
 }	
+

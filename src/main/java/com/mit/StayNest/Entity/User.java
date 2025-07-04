@@ -12,18 +12,28 @@ import jakarta.persistence.GenerationType;
 @Table(name = "users")
 public class User {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
 
-	@Column(nullable = false, unique = true)
-	private String email;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;  
 
-	@Column(nullable = false)
-	private String password;
 
-	@Column(nullable = false)
-	private String name;
+
+    @Column(nullable = false, unique = true)
+    private String email;  
+
+	
+
+    @Column(nullable = false)
+    private String password;  
+
+
+
+    @Column(nullable = false)
+    private String name; 
+
+	
+
 
 	@Column(nullable = false)
 	private String role; // Role of user: "TENANT" or "OWNER"
@@ -31,9 +41,25 @@ public class User {
 	@Column(nullable = true)
 	private String phoneNumber;
 
+
+    
+    public User() {
+        super();
+    }
+
 	public Long getId() {
 		return id;
 	}
+
+
+    public User(Long id, String email, String password, String name, String role, String phoneNumber) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.role = role;
+        this.phoneNumber = phoneNumber;
+    }
 
 	public void setId(Long id) {
 		this.id = id;
@@ -42,6 +68,7 @@ public class User {
 	public String getEmail() {
 		return email;
 	}
+
 
 	public void setEmail(String email) {
 		this.email = email;
@@ -76,19 +103,6 @@ public class User {
 	}
 
 	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-
-	public User() {
-		super();
-	}
-
-	public User(Long id, String email, String password, String name, String role, String phoneNumber) {
-		this.id = id;
-		this.email = email;
-		this.password = password;
-		this.name = name;
-		this.role = role;
 		this.phoneNumber = phoneNumber;
 	}
 
