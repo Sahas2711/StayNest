@@ -8,9 +8,12 @@ public class StayNestApplication {
 
 	public static void main(String[] args) {
 
+
 		System.out.println("Hello World");
 
 		
+
+
 
 		SpringApplication.run(StayNestApplication.class, args);
 	}
