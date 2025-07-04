@@ -16,4 +16,6 @@ public interface ListingService {
 	public Listing updateListing(Listing listing);
 	
 	public Listing deleteListing(Listing listing);
+	
+	public List<Listing> searchByArea(String area);
 }	

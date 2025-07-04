@@ -78,4 +78,10 @@ public class ListingServiceImpl implements ListingService {
 		}
 	}
 
+	@Override
+	public List<Listing> searchByArea(String area) {
+		return listingRepo.findByAddressContaining(area);
+		
+	}
+
 }
