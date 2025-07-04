@@ -77,6 +77,25 @@ public class ListingServiceImpl implements ListingService {
 			throw new RuntimeException("Listing Not found with ID :- " + listing.getId());
 		}
 	}
+	
+	@Override
+	public List<Listing> getListingByOwnerId(long ownerId){
+		Optional<User> optionalUser = userRepo.findById(ownerId);
+		if(optionalUser.isPresent()) {
+			return listingRepo.findByOwnerId(ownerId);
+		}
+		else {
+			throw new RuntimeException("Owner not found with ID : "+ownerId);
+		}
+		
+	}
+	
+
+	@Override
+	public List<Listing> searchByArea(String area) {
+		return listingRepo.findByAddressContaining(area);
+		
+	}
 
 	@Override
 	public Listing getSpecificListing(Long id) {
