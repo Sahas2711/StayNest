@@ -17,5 +17,14 @@ public interface ListingService {
 	
 	public Listing deleteListing(Listing listing);
 	
+
+
+	public Listing getSpecificListing(Long id);
+
+
+	public List<Listing> getListingByOwnerId(long ownerId);
+
 	public List<Listing> searchByArea(String area);
+
 }	
+
