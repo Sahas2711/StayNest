@@ -1,7 +1,6 @@
 
 package com.mit.StayNest.Entity;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -12,82 +11,76 @@ import jakarta.persistence.Table;
 @Table(name = "pg_listings")
 public class Listing {
 
-    @Id
-    private Long id; 
+	@Id
+	private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
-    private User owner; 
+	@ManyToOne
+	@JoinColumn(name = "owner_id")
+	private Owner owner;
 
-    private String title;
+	private String title;
 
-    private String address; 
+	private String address;
 
-    private Double rent; 
+	private Double rent;
 
-    public Listing() {
-        super();
-    }
+	public Listing() {
+		super();
+	}
 
-    public Listing(Long id, User owner, String title, String address, Double rent) {
-        super();
-        this.id = id;
-        this.owner = owner;
-        this.title = title;
-        this.address = address;
-        this.rent = rent;
-    }
+	public Listing(Long id, Owner owner, String title, String address, Double rent) {
+		super();
+		this.id = id;
+		this.owner = owner;
+		this.title = title;
+		this.address = address;
+		this.rent = rent;
+	}
 
- 
+	public Long getId() {
+		return id;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Owner getOwner() {
+		return owner;
+	}
 
-    public User getOwner() {
-        return owner;
-    }
+	public void setOwner(Owner owner) {
+		this.owner = owner;
+	}
 
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	public String getAddress() {
+		return address;
+	}
 
-    public String getAddress() {
-        return address;
-    }
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+	public Double getRent() {
+		return rent;
+	}
 
-    public Double getRent() {
-        return rent;
-    }
+	public void setRent(Double rent) {
+		this.rent = rent;
+	}
 
-    public void setRent(Double rent) {
-        this.rent = rent;
-    }
-
-
-    @Override
-    public String toString() {
-        return "Listing [id=" + id 
-                + ", title=" + title 
-                + ", address=" + address 
-                + ", rent=" + rent 
-                + ", owner=" + (owner != null ? owner.getId() : null) + "]";
-    }
+	@Override
+	public String toString() {
+		return "Listing [id=" + id + ", title=" + title + ", address=" + address + ", rent=" + rent + ", owner="
+				+ (owner != null ? owner.getId() : null) + "]";
+	}
 
 }
