@@ -5,6 +5,10 @@ package com.mit.StayNest.Entity;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -35,7 +39,12 @@ public class Review {
 	private Listing listing;
 	private Long rating;
 	private String feedback;
+	
+	@CreationTimestamp
+	@Column(updatable = false)
 	private LocalDateTime createdAt;
+	
+	
 
 	public Long getId() {
 		return id;

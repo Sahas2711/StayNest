@@ -11,10 +11,6 @@ public class StayNestApplication {
 
 		System.out.println("Hello World");
 
-		
-
-
-
 		SpringApplication.run(StayNestApplication.class, args);
 	}
 }
