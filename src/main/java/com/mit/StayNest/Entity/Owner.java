@@ -24,7 +24,7 @@ public class Owner {
 	@Column(nullable = false)
 	private String name;
 
-	@Column(nullable = true)
+	@Column(nullable = false)
 	private String phoneNumber;
 
 	public Long getId() {
