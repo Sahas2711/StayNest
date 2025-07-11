@@ -1,86 +1,129 @@
-
 package com.mit.StayNest.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "pg_listings")
 public class Listing {
 
-	@Id
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@ManyToOne
-	@JoinColumn(name = "owner_id")
-	private Owner owner;
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
+    private Owner owner;
 
-	private String title;
+    @Column(nullable = false)
+    private String title;
 
-	private String address;
+    @Column(nullable = false)
+    private String address;
 
-	private Double rent;
+    @Column(nullable = false)
+    private Double rent;
 
-	public Listing() {
-		super();
-	}
+    @Column(nullable = false)
+    private String url;
 
-	public Listing(Long id, Owner owner, String title, String address, Double rent) {
-		super();
-		this.id = id;
-		this.owner = owner;
-		this.title = title;
-		this.address = address;
-		this.rent = rent;
-	}
+    @Column(nullable = false, length = 1000)
+    private String description;
 
-	public Long getId() {
-		return id;
-	}
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
-	public Owner getOwner() {
-		return owner;
-	}
+    // === Constructors ===
+    public Listing() {
+        super();
+    }
 
-	public void setOwner(Owner owner) {
-		this.owner = owner;
-	}
+    public Listing(Long id, Owner owner, String title, String address, Double rent, String url, String description) {
+        this.id = id;
+        this.owner = owner;
+        this.title = title;
+        this.address = address;
+        this.rent = rent;
+        this.url = url;
+        this.description = description;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+   
+    public Long getId() {
+        return id;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getAddress() {
-		return address;
-	}
+    public Owner getOwner() {
+        return owner;
+    }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+    public void setOwner(Owner owner) {
+        this.owner = owner;
+    }
 
-	public Double getRent() {
-		return rent;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setRent(Double rent) {
-		this.rent = rent;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Double getRent() {
+        return rent;
+    }
+
+    public void setRent(Double rent) {
+        this.rent = rent;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
 
 	@Override
 	public String toString() {
-		return "Listing [id=" + id + ", title=" + title + ", address=" + address + ", rent=" + rent + ", owner="
-				+ (owner != null ? owner.getId() : null) + "]";
+		return "Listing [id=" + id + ", owner=" + owner + ", title=" + title + ", address=" + address + ", rent=" + rent
+				+ ", url=" + url + ", description=" + description + ", createdAt=" + createdAt + ", updatedAt="
+				+ updatedAt + "]";
 	}
-
 }

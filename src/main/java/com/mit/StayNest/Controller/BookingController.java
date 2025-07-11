@@ -19,58 +19,48 @@ import java.util.List;
 @RequestMapping("/api/bookings")
 public class BookingController {
 
-    @Autowired
-    private BookingService bookingService;
+	@Autowired
+	private BookingService bookingService;
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private ListingService listingService;
 
-    @Autowired
-    private ListingService listingService;
+	@Autowired
+	BookingRepository bookingRepo;
 
-    @Autowired
-    BookingRepository bookingRepo;
-    
-    @Autowired
-    private UserRepository userRepo; 
-    
-    // Book a listing (POST /api/bookings)
-    @PostMapping
-    public Booking bookListing(@RequestBody Booking booking) {
-        return bookingService.createBooking(booking);
-    }
+	@Autowired
+	private UserRepository userRepo;
 
-    @GetMapping("/user/{id}")
-    public List<Booking> getBookingsForTenant(@PathVariable("id") Long tenantId) {
-        User tenant = userRepo.findById(tenantId)
-                              .orElseThrow(() -> new RuntimeException("User not found"));
-        return bookingRepo.findByTenant(tenant);
-    }
-    // View bookings for a listing 
-    @GetMapping("/listing/{id}")
-    public List<Booking> getBookingsForListing(@PathVariable Long id) {
-        Listing listing = listingService.getSpecificListing(id);
-        return bookingService.getBookingsByListing(listing);
-    }
+	@PostMapping
+	public Booking bookListing(@RequestBody Booking booking) {
+		return bookingService.createBooking(booking);
+	}
 
+	@GetMapping("/user/{id}")
+	public List<Booking> getBookingsForTenant(@PathVariable("id") Long tenantId) {
+		User tenant = userRepo.findById(tenantId).orElseThrow(() -> new RuntimeException("User not found"));
+		return bookingRepo.findByTenant(tenant);
+	}
 
+	@GetMapping("/listing/{id}")
+	public List<Booking> getBookingsForListing(@PathVariable Long id) {
+		Listing listing = listingService.getSpecificListing(id);
+		return bookingService.getBookingsByListing(listing);
+	}
 
-    // Cancel a booking 
-    @PutMapping("/{id}/cancel")
-    public Booking cancelBooking(@PathVariable Long id) {
-        return bookingService.cancelBooking(id);
-    }
+	@PutMapping("/{id}/cancel")
+	public Booking cancelBooking(@PathVariable Long id) {
+		return bookingService.cancelBooking(id);
+	}
 
-    // ✅ Get booking details (GET /api/bookings/{id})
-    @GetMapping("/{id}")
-    public Booking getBookingDetails(@PathVariable Long id) {
-        return bookingService.getBookingById(id)
-                .orElseThrow(() -> new RuntimeException("Booking not found with ID: " + id));
-    }
+	@GetMapping("/{id}")
+	public Booking getBookingDetails(@PathVariable Long id) {
+		return bookingService.getBookingById(id)
+				.orElseThrow(() -> new RuntimeException("Booking not found with ID: " + id));
+	}
 
-    //  Filter bookings by status
-    @GetMapping("/status/{status}")
-    public List<Booking> getBookingsByStatus(@PathVariable String status) {
-        return bookingService.getBookingsByStatus(status);
-    }
+	@GetMapping("/status/{status}")
+	public List<Booking> getBookingsByStatus(@PathVariable String status) {
+		return bookingService.getBookingsByStatus(status);
+	}
 }

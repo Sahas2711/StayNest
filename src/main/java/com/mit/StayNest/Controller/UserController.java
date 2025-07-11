@@ -31,14 +31,15 @@ public class UserController {
         return this.userService.register(request);
     }
 
-    @PostMapping("/login")
-    public User login(@RequestBody User request) {
-        // login logic here
-        return this.userService.login(request);
-    }
+//    @PostMapping("/login")
+//    public User login(@RequestBody User request) {
+//        // login logic here
+//        return this.userService.login(request);
+//    }
     
     @GetMapping("/getusers")
     public List<User> getUsers(){
+    	System.out.println("Inside get users");
     	return this.userService.getUser();
     }
     
@@ -66,8 +67,5 @@ public class UserController {
     public List<User> getUserByrole(@RequestParam String role){
     	return this.userService.getUserByRole(role);
     }
-    
-    
-    
 }
 

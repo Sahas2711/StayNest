@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mit.StayNest.Entity.User;
@@ -22,15 +23,21 @@ public class UserServiceImpl implements UserService {
 		return userRepo.findAll();
 	}
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	@Override
 	public User register(User user) {
+	    Optional<User> existingUser = userRepo.findByEmail(user.getEmail());
+	    if (existingUser.isPresent()) {
+	        throw new RuntimeException("User already exists with email: " + user.getEmail());
+	    }
 
-		Optional<User> existingUser = userRepo.findByEmail(user.getEmail());
-		if (existingUser.isPresent()) {
-			throw new RuntimeException("User already exists with email: " + user.getEmail());
-		}
+	    // Encode the password before saving
+	    String encodedPassword = passwordEncoder.encode(user.getPassword());
+	    user.setPassword(encodedPassword);
 
-		return userRepo.save(user);
+	    return userRepo.save(user);
 	}
 
 	@Override
