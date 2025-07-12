@@ -11,9 +11,10 @@ import jakarta.persistence.*;
 @Table(name = "pg_listings")
 public class Listing {
 
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
 
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)

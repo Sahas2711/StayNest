@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mit.StayNest.Entity.Owner;
@@ -16,7 +17,9 @@ public class OwnerServiceImpl implements OwnerService {
 
 	@Autowired
 	private OwnerRepository ownerRepo;
-
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	@Override
 	public Owner register(Owner owner) {
 
@@ -24,7 +27,8 @@ public class OwnerServiceImpl implements OwnerService {
 		if (existingowner.isPresent()) {
 			throw new RuntimeException("owner already exists with email: " +owner.getEmail());
 		}
-
+		String encodedPassword = passwordEncoder.encode(owner.getPassword());
+	    owner.setPassword(encodedPassword);
 		return ownerRepo.save(owner);
 	}
 
