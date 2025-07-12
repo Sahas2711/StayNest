@@ -104,5 +104,9 @@ public class ListingServiceImpl implements ListingService {
 			throw new RuntimeException("No Listing exists with this id: " + id);
 		}
 	}
+	public Optional<Listing> findById(Long id) {
+	    return listingRepo.findById(id);
+	}
+
 
 }

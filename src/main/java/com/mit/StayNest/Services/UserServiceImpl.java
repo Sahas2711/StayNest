@@ -1,9 +1,10 @@
-
 package com.mit.StayNest.Services;
 
 import java.util.List;
-
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,106 +16,130 @@ import com.mit.StayNest.Repository.UserRepository;
 @Service
 public class UserServiceImpl implements UserService {
 
-	@Autowired
-	private UserRepository userRepo;
+    @Autowired
+    private UserRepository userRepo;
 
-	@Override
-	public List<User> getUser() {
-		return userRepo.findAll();
-	}
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
-	@Override
-	public User register(User user) {
-	    Optional<User> existingUser = userRepo.findByEmail(user.getEmail());
-	    if (existingUser.isPresent()) {
-	        throw new RuntimeException("User already exists with email: " + user.getEmail());
-	    }
+    @Override
+    public List<User> getUser() {
+        logger.info("Fetching all users");
+        return userRepo.findAll();
+    }
 
-	    // Encode the password before saving
-	    String encodedPassword = passwordEncoder.encode(user.getPassword());
-	    user.setPassword(encodedPassword);
+    @Override
+    public User register(User user) {
+        logger.info("Attempting to register user with email: {}", user.getEmail());
+        Optional<User> existingUser = userRepo.findByEmail(user.getEmail());
+        if (existingUser.isPresent()) {
+            logger.warn("Registration failed. User already exists with email: {}", user.getEmail());
+            throw new RuntimeException("User already exists with email: " + user.getEmail());
+        }
 
-	    return userRepo.save(user);
-	}
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
 
-	@Override
-	public User login(User user) {
-		if (user.getEmail() == null || user.getPassword() == null)
-			throw new RuntimeException("Credentials not found");
-		Optional<User> existingUser = userRepo.findByEmail(user.getEmail());
+        User savedUser = userRepo.save(user);
+        logger.info("User registered successfully with ID: {}", savedUser.getId());
+        return savedUser;
+    }
 
-		if (existingUser.isPresent() && existingUser.get().getPassword().equals(user.getPassword())) {
-			return existingUser.get();
-		}
+    @Override
+    public User login(User user) {
+        logger.info("Login attempt for email: {}", user.getEmail());
 
-		throw new RuntimeException("Invalid email or password");
-	}
+        if (user.getEmail() == null || user.getPassword() == null) {
+            logger.warn("Login failed: missing credentials");
+            throw new RuntimeException("Credentials not found");
+        }
 
-	@Override
-	public User currentUser(User user) {
-		Optional<User> currentUser = userRepo.findByEmail(user.getEmail());
-		if (currentUser.isPresent()) {
-			return currentUser.get();
-		} else {
-			throw new RuntimeException("User does not exist");
-		}
+        Optional<User> existingUser = userRepo.findByEmail(user.getEmail());
 
-	}
+        if (existingUser.isPresent()) {
+            if (passwordEncoder.matches(user.getPassword(), existingUser.get().getPassword())) {
+                logger.info("Login successful for email: {}", user.getEmail());
+                return existingUser.get();
+            } else {
+                logger.warn("Login failed: invalid password for email: {}", user.getEmail());
+            }
+        } else {
+            logger.warn("Login failed: user not found for email: {}", user.getEmail());
+        }
 
-	@Override
-	public User updateUser(User user) {
-		Optional<User> currentUser = userRepo.findByEmail(user.getEmail());
-		if (currentUser.isPresent()) {
-			User existingUser = currentUser.get();
+        throw new RuntimeException("Invalid email or password");
+    }
 
-			if (user.getName() != null) {
-				existingUser.setName(user.getName());
-			}
-			if (user.getPassword() != null) {
-				existingUser.setPassword(user.getPassword());
-			}
-			if (user.getPhoneNumber() != null) {
-				existingUser.setPhoneNumber(user.getPhoneNumber());
-			}
-			if (user.getRole() != null) {
-				existingUser.setRole(user.getRole());
-			}
+    @Override
+    public User currentUser(User user) {
+        logger.info("Fetching current user by email: {}", user.getEmail());
+        Optional<User> currentUser = userRepo.findByEmail(user.getEmail());
 
-			return userRepo.save(existingUser);
-		} else {
-			throw new RuntimeException("User does not exist");
-		}
-	}
+        if (currentUser.isPresent()) {
+            return currentUser.get();
+        } else {
+            logger.warn("Current user not found for email: {}", user.getEmail());
+            throw new RuntimeException("User does not exist");
+        }
+    }
 
-	@Override
-	public User deleteUser(User user) {
-		Optional<User> currentUser = userRepo.findById(user.getId());
-		if(currentUser.isPresent()) {
-			userRepo.deleteById(user.getId());
-			return currentUser.get();
-		}
-		else {
-			throw new RuntimeException("No User exist with this id");
-		}
-	}
+    @Override
+    public User updateUser(User user) {
+        logger.info("Updating user with email: {}", user.getEmail());
+        Optional<User> currentUser = userRepo.findByEmail(user.getEmail());
 
-	@Override
-	public User getUserById(String id) {
-		Optional<User> user = userRepo.findById(Long.parseLong(id));
-		if(user.isPresent()) {
-			return user.get();
-		}
-		else {
-			throw new RuntimeException("No User exist with this id");
-		}
-	}
+        if (currentUser.isPresent()) {
+            User existingUser = currentUser.get();
 
-	@Override
-	public List<User> getUserByRole(String role) {
-		return userRepo.findByRole(role);
-	}
+            if (user.getName() != null) existingUser.setName(user.getName());
+            if (user.getPassword() != null) existingUser.setPassword(user.getPassword()); // optional: re-encode
+            if (user.getPhoneNumber() != null) existingUser.setPhoneNumber(user.getPhoneNumber());
+            if (user.getRole() != null) existingUser.setRole(user.getRole());
+
+            User updated = userRepo.save(existingUser);
+            logger.info("User updated successfully for ID: {}", updated.getId());
+            return updated;
+        } else {
+            logger.warn("Update failed. User not found for email: {}", user.getEmail());
+            throw new RuntimeException("User does not exist");
+        }
+    }
+
+    @Override
+    public User deleteUser(User user) {
+        logger.info("Attempting to delete user with ID: {}", user.getId());
+        Optional<User> currentUser = userRepo.findById(user.getId());
+
+        if (currentUser.isPresent()) {
+            userRepo.deleteById(user.getId());
+            logger.info("User deleted successfully with ID: {}", user.getId());
+            return currentUser.get();
+        } else {
+            logger.warn("Delete failed. User not found with ID: {}", user.getId());
+            throw new RuntimeException("No User exists with this id");
+        }
+    }
+
+    @Override
+    public User getUserById(String id) {
+        logger.info("Fetching user by ID: {}", id);
+        Optional<User> user = userRepo.findById(Long.parseLong(id));
+
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            logger.warn("User not found with ID: {}", id);
+            throw new RuntimeException("No User exists with this id");
+        }
+    }
+
+    @Override
+    public List<User> getUserByRole(String role) {
+        logger.info("Fetching users by role: {}", role);
+        List<User> users = userRepo.findByRole(role);
+        logger.info("Found {} users with role '{}'", users.size(), role);
+        return users;
+    }
 }
-
