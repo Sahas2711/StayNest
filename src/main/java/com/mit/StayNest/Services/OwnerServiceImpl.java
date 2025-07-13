@@ -61,8 +61,10 @@ public class OwnerServiceImpl implements OwnerService {
 				existingowner.setName(owner.getName());
 			}
 			if (owner.getPassword() != null) {
-				existingowner.setPassword(owner.getPassword());
+			    String encodedPassword = passwordEncoder.encode(owner.getPassword());
+			    existingowner.setPassword(encodedPassword);
 			}
+
 			if (owner.getPhoneNumber() != null) {
 				existingowner.setPhoneNumber(owner.getPhoneNumber());
 			}

@@ -94,7 +94,11 @@ public class UserServiceImpl implements UserService {
             User existingUser = currentUser.get();
 
             if (user.getName() != null) existingUser.setName(user.getName());
-            if (user.getPassword() != null) existingUser.setPassword(user.getPassword()); // optional: re-encode
+            if (user.getPassword() != null) {
+                String encodedPassword = passwordEncoder.encode(user.getPassword());
+                existingUser.setPassword(encodedPassword);
+            }
+
             if (user.getPhoneNumber() != null) existingUser.setPhoneNumber(user.getPhoneNumber());
             if (user.getRole() != null) existingUser.setRole(user.getRole());
 

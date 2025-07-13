@@ -28,9 +28,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class AuthController {
 
-    @Autowired
-    @Qualifier("customUserDetailService") 
-    private CustomUserDetailsService customUserDetailsService;
+	@Autowired
+	
+	private UserDetailsService customUserDetailsService;
+
    
 //    @Autowired
 //    @Qualifier("ownerUserDetailsService") 
@@ -61,7 +62,10 @@ public class AuthController {
         } catch (BadCredentialsException e) {
             logger.warn("Authentication failed for email: {}", request.getEmail());
             throw e;
-        }
+        } catch (IllegalArgumentException e) {
+            logger.error("Password encoding issue: {}", e.getMessage());
+            throw new RuntimeException("Invalid password format. Please reset your password.");
+        } 
 
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(request.getEmail());
         String token = helper.generateToken(userDetails);
@@ -111,4 +115,5 @@ public class AuthController {
         logger.error("Unhandled exception: ", ex);
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    
 }

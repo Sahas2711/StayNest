@@ -55,7 +55,12 @@ public class ReviewController {
     @PostMapping("/add")
     public ResponseEntity<?> addReview(@RequestBody Review review, HttpServletRequest request) {
         try {
-            User tenant = getUserFromToken(request);
+            if(review.getListing() == null) {
+            	logger.info("No Listing found with id : {}",review.getId());
+            	throw new RuntimeException("Listing not found with id ");
+            }
+        	User tenant = getUserFromToken(request);
+            
             review.setTenant(tenant);
             logger.info("Adding review by tenant: {}", tenant.getEmail());
 
