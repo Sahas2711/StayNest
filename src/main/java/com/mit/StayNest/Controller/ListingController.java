@@ -145,14 +145,14 @@ public class ListingController {
         }
     }
 
-    // ✅ Search by area
-    @GetMapping("/search/{area}")
-    public List<Listing> searchByArea(@PathVariable String area) {
+    @GetMapping("/search")
+    public List<Listing> searchByArea(@RequestParam("location") String area) {
         logger.info("Searching listings in area: {}", area);
         List<Listing> results = listingServiceImpl.searchByArea(area);
         logger.info("Found {} listings in area '{}'", results.size(), area);
         return results;
     }
+
 
     // ✅ View profile (owner ID and name from JWT)
     @GetMapping("/owner/profile")

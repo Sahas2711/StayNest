@@ -31,7 +31,7 @@ public class Booking {
 	private Date endDate;
 
 	@Column
-	private String status; // BOOKED or CANCELLED
+	private String status;
 
 	public Booking() {
 		super();

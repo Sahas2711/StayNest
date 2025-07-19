@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtHelper jwtHelper;
 
     @Autowired
-    @Qualifier("customUserDetailService") // ✅ Match with your @Service name
+    @Qualifier("customUserDetailService") 
     private CustomUserDetailsService userDetailsService;
 
     @Override
@@ -62,7 +62,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             logger.warn("Invalid Authorization header format.");
         }
 
-        // Validate token and set authentication
+        
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
             boolean isTokenValid = this.jwtHelper.validateToken(token, userDetails);
