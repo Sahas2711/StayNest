@@ -1,4 +1,3 @@
-
 package com.mit.StayNest.Entity;
 
 import java.util.Date;
@@ -30,22 +29,21 @@ public class Booking {
 	@Column(name = "end_date")
 	private Date endDate;
 
+	public double getTotalRent() {
+		return totalRent;
+	}
+
+	public void setTotalRent(double totalRent) {
+		this.totalRent = totalRent;
+	}
+
 	@Column
 	private String status;
 
-	public Booking() {
-		super();
-	}
-
-	public Booking(Long id, User tenant, Listing listing, Date startDate, Date endDate, String status) {
-		super();
-		this.id = id;
-		this.tenant = tenant;
-		this.listing = listing;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.status = status;
-	}
+	@Column
+	private double totalRent;
+	
+	
 
 	public Long getId() {
 		return id;
@@ -95,11 +93,29 @@ public class Booking {
 		this.status = status;
 	}
 
+	public Booking() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Booking(Long id, User tenant, Listing listing, Date startDate, Date endDate, String status,
+			double totalRent) {
+		super();
+		this.id = id;
+		this.tenant = tenant;
+		this.listing = listing;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.status = status;
+		this.totalRent = totalRent;
+	}
+
 	@Override
 	public String toString() {
-		return "Booking [id=" + id + ", tenant=" + (tenant != null ? tenant.getId() : null) + ", listing="
-				+ (listing != null ? listing.getId() : null) + ", startDate=" + startDate + ", endDate=" + endDate
-				+ ", status=" + status + "]";
+		return "Booking [id=" + id + ", tenant=" + tenant + ", listing=" + listing + ", startDate=" + startDate
+				+ ", endDate=" + endDate + ", status=" + status + ", totalRent=" + totalRent + "]";
 	}
+
+	
 
 }
