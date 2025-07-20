@@ -26,7 +26,7 @@ public class BookingServiceImpl implements BookingService {
     public Booking createBooking(Booking booking) {
     	logger.info("Creating booking for listing ID: {} by tenant ID: {}",
                 booking.getListing().getId(), booking.getTenant().getId());
-        booking.setStatus("BOOKED");
+        booking.setStatus("NOT BOOKED");
 
         Booking saved = bookingRepository.save(booking);
         logger.info("Booking created successfully with ID: {}", saved.getId());

@@ -1,8 +1,6 @@
 
 package com.mit.StayNest.Entity;
 
-
-
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,16 +13,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-
 import java.time.LocalDateTime;
-
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-
 
 @Entity
 @Table(name = "reviews")
@@ -37,14 +32,18 @@ public class Review {
 	@ManyToOne
 	@JoinColumn(name = "listing_id")
 	private Listing listing;
+	@Column(nullable = false)
 	private Long rating;
-	private String feedback;
 	
+	@Column(nullable = false)
+	private String feedback;
+
+	@Column
+	private String duration;
+
 	@CreationTimestamp
 	@Column(updatable = false)
 	private LocalDateTime createdAt;
-	
-	
 
 	public Long getId() {
 		return id;
@@ -86,6 +85,14 @@ public class Review {
 		this.feedback = feedback;
 	}
 
+	public String getDuration() {
+		return duration;
+	}
+
+	public void setDuration(String duration) {
+		this.duration = duration;
+	}
+
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
@@ -99,19 +106,23 @@ public class Review {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Review(Long id, User tenant, Listing listing, Long rating, String feedback, LocalDateTime createdAt) {
+	public Review(Long id, User tenant, Listing listing, Long rating, String feedback, String duration,
+			LocalDateTime createdAt) {
 		super();
 		this.id = id;
 		this.tenant = tenant;
 		this.listing = listing;
 		this.rating = rating;
 		this.feedback = feedback;
+		this.duration = duration;
 		this.createdAt = createdAt;
 	}
 
 	@Override
 	public String toString() {
-		return "Review [id=" + id + ", rating=" + rating + ", feedback=" + feedback + ", createdAt=" + createdAt + "]";
+		return "Review [id=" + id + ", tenant=" + tenant + ", listing=" + listing + ", rating=" + rating + ", feedback="
+				+ feedback + ", duration=" + duration + ", createdAt=" + createdAt + "]";
 	}
+	
 
 }

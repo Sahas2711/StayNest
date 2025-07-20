@@ -7,9 +7,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.mit.StayNest.Entity.Booking;
 import com.mit.StayNest.Entity.Listing;
 import com.mit.StayNest.Entity.User;
 import com.mit.StayNest.Entity.Owner;
+import com.mit.StayNest.Repository.BookingRepository;
 import com.mit.StayNest.Repository.ListingRepository;
 import com.mit.StayNest.Repository.OwnerRepository;
 import com.mit.StayNest.Repository.UserRepository;
@@ -30,6 +32,8 @@ public class ListingServiceImpl implements ListingService {
 	@Autowired
 	OwnerRepository ownerRepo;
 
+	@Autowired
+	BookingRepository bookingRepo;
 	@Override
 	public Listing createListing(Listing listing) {
 		Long id = listing.getOwner().getId();
@@ -128,6 +132,60 @@ public class ListingServiceImpl implements ListingService {
 		logger.info("Finding listing by ID: {}", id);
 	    return listingRepo.findById(id);
 	}
+
+	@Override
+	public List<Listing> searchByGender(String gender) {
+		logger.info("Finding Listings with gender {}" , gender);
+		return listingRepo.findByGender(gender);
+	}
+
+	@Override
+	public List<Listing> searchBelowEqualRent(Double rent) {
+		logger.info("Finding Listings below Rent :- {}" , rent);
+		return listingRepo.findByRentLessThanEqual(rent);
+	}
+	
+//	@Override
+//	public boolean handleBookingAction(long bookingId, String action) {
+//	    logger.info("Received booking action request: bookingId = {}, action = {}", bookingId, action);
+//
+//	    Optional<Booking> bookingOpt = bookingRepo.findById(bookingId);
+//
+//	    if (bookingOpt.isEmpty()) {
+//	        logger.warn("Booking action failed — Booking with ID {} not found", bookingId);
+//	        throw new RuntimeException("Booking ID not found: " + bookingId);
+//	    }
+//
+//	    Booking booking = bookingOpt.get();
+//	    String currentStatus = booking.getStatus();
+//	    logger.info("Current status of booking ID {} is {}", bookingId, currentStatus);
+//
+//	    if (!"PENDING".equalsIgnoreCase(currentStatus)) {
+//	        logger.warn("Booking ID {} is already in '{}' status — action not allowed", bookingId, currentStatus);
+//	        throw new RuntimeException("Booking is already " + currentStatus + ". Action not allowed.");
+//	    }
+//
+//	    switch (action.toUpperCase()) {
+//	        case "ACCEPT":
+//	            booking.setStatus("CONFIRMED");
+//	            logger.info("Booking ID {} has been approved by the owner", bookingId);
+//	            break;
+//
+//	        case "REJECT":
+//	            booking.setStatus("REJECTED");
+//	            logger.info("Booking ID {} has been rejected by the owner", bookingId);
+//	            break;
+//
+//	        default:
+//	            logger.error("Invalid booking action '{}' received for booking ID {}", action, bookingId);
+//	            throw new IllegalArgumentException("Invalid action: " + action + ". Use ACCEPT or REJECT.");
+//	    }
+//
+//	    bookingRepo.save(booking);
+//	    logger.info("Booking ID {} status updated to '{}'", bookingId, booking.getStatus());
+//
+//	    return true;
+//	}
 
 
 }

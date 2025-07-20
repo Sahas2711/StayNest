@@ -1,6 +1,7 @@
 package com.mit.StayNest.Controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -145,7 +146,7 @@ public class ListingController {
         }
     }
 
-    @GetMapping("/search")
+    @GetMapping("/search/area")
     public List<Listing> searchByArea(@RequestParam("location") String area) {
         logger.info("Searching listings in area: {}", area);
         List<Listing> results = listingServiceImpl.searchByArea(area);
@@ -167,6 +168,20 @@ public class ListingController {
         }
     }
 
+    @GetMapping("/search/gender")
+    public List<Listing> searchByGender(@RequestParam("gender") String gender) {
+        logger.info("Searching listings in gender: {}", gender);
+        List<Listing> results = listingServiceImpl.searchByGender(gender);
+        logger.info("Found {} listings with gender '{}'", results.size(), gender);
+        return results;
+    }
+    @GetMapping("/search/budget")
+    public List<Listing> searchByBudget(@RequestParam("budget") double rent) {
+        logger.info("Searching listings in area: {}", rent);
+        List<Listing> results = listingServiceImpl.searchBelowEqualRent(rent);
+        logger.info("Found {} listings in area '{}'", results.size(), rent);
+        return results;
+    }
     // ✅ Utility method to extract Owner from JWT token
     private Owner getOwnerFromToken(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
@@ -183,4 +198,5 @@ public class ListingController {
         logger.warn("Authorization header missing or malformed");
         throw new RuntimeException("Authorization header is missing or invalid");
     }
+    
 }
