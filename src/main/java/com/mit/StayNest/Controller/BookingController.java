@@ -2,8 +2,10 @@ package com.mit.StayNest.Controller;
 
 import com.mit.StayNest.Entity.Booking;
 import com.mit.StayNest.Entity.Listing;
+import com.mit.StayNest.Entity.Owner;
 import com.mit.StayNest.Entity.User;
 import com.mit.StayNest.Repository.BookingRepository;
+import com.mit.StayNest.Repository.OwnerRepository;
 import com.mit.StayNest.Repository.UserRepository;
 import com.mit.StayNest.Security.JwtHelper;
 import com.mit.StayNest.Services.BookingService;
@@ -15,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,6 +43,9 @@ public class BookingController {
 
     @Autowired
     private JwtHelper jwtHelper;
+    
+    @Autowired
+    private OwnerRepository ownerRepository;
 
     // ✅ Utility: Extract user from JWT token
     private User getUserFromToken(HttpServletRequest request) {
@@ -105,4 +112,46 @@ public class BookingController {
         logger.info("Fetching bookings with status: {}", status);
         return bookingService.getBookingsByStatus(status);
     }
+    
+ // ✅ Accept or Reject Booking by Owner
+    @PostMapping("/listing/booking/action")
+    public ResponseEntity<String> handleBookingAction(@RequestParam Long bookingId,
+                                                      @RequestParam String action,
+                                                      HttpServletRequest request) {
+        Owner user = getOwnerFromToken(request);
+        logger.info("Owner {} is attempting to {} booking ID {}", user.getEmail(), action, bookingId);
+
+        try {
+            bookingService.updateBookingStatus(bookingId, action.toUpperCase(), user);
+            logger.info("Booking ID {} has been {}ED by owner {}", bookingId, action.toUpperCase(), user.getEmail());
+            return ResponseEntity.ok("Booking has been " + action.toLowerCase() + "ed successfully.");
+        } catch (IllegalArgumentException e) {
+            logger.warn("Invalid action '{}' on booking ID {} by owner {}", action, bookingId, user.getEmail());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (RuntimeException e) {
+            logger.error("Unauthorized or invalid booking update: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        } catch (Exception e) {
+            logger.error("Unexpected error during booking update: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error occurred.");
+        }
+    }
+    
+    private Owner getOwnerFromToken(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            String email = jwtHelper.getUsernameFromToken(token); // assumes 'sub' = email
+            logger.debug("Extracted email from token: {}", email);
+
+            return ownerRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("Owner not found with email: " + email));
+        }
+
+        logger.warn("Authorization header missing or malformed");
+        throw new RuntimeException("Authorization header is missing or invalid");
+    }
+
+
 }

@@ -2,6 +2,7 @@ package com.mit.StayNest.Services;
 
 import com.mit.StayNest.Entity.Booking;
 import com.mit.StayNest.Entity.Listing;
+import com.mit.StayNest.Entity.Owner;
 import com.mit.StayNest.Entity.User;
 
 import java.util.List;
@@ -20,4 +21,7 @@ public interface BookingService {
     List<Booking> getBookingsByStatus(String status);
 
     Booking cancelBooking(Long id);
+    
+    void updateBookingStatus(Long bookingId, String action, Owner owner);
+
 }
