@@ -18,5 +18,8 @@ public interface ListingRepository extends JpaRepository<Listing, Long> {
     List<Listing> findByOwnerId(long ownerId);
 
     List<Listing> findByAddressContaining(String area);
-
+    
+    List<Listing> findByGender(String gender);
+    
+    List<Listing> findByRentLessThanEqual(double rent);
 }

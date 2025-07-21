@@ -28,11 +28,11 @@ public class Listing {
 	private String gender;
 	// Facilities
 	@Column(nullable = false)
-	private boolean isWifiAvilable ;
+	private boolean isWifiAvilable;
 	@Column(nullable = false)
-	private boolean isAcAvilable ;
+	private boolean isAcAvilable;
 	@Column(nullable = false)
-	private boolean isMealsAvilable ;
+	private boolean isMealsAvilable;
 	@Column(nullable = false)
 	private boolean isLaudryAvilable;
 	@Column(nullable = false)
@@ -61,7 +61,7 @@ public class Listing {
 
 	@Column(nullable = false)
 	private String roomType;
-	
+
 	@Column(nullable = false)
 	private Date startDate;
 
@@ -155,67 +155,67 @@ public class Listing {
 	}
 
 	public boolean getIsWifiAvilable() {
-	    return isWifiAvilable;
+		return isWifiAvilable;
 	}
 
 	public void setWifiAvilable(boolean isWifiAvilable) {
-	    this.isWifiAvilable = isWifiAvilable;
+		this.isWifiAvilable = isWifiAvilable;
 	}
 
 	public boolean getIsAcAvilable() {
-	    return isAcAvilable;
+		return isAcAvilable;
 	}
 
 	public void setAcAvilable(boolean isAcAvilable) {
-	    this.isAcAvilable = isAcAvilable;
+		this.isAcAvilable = isAcAvilable;
 	}
 
 	public boolean getIsMealsAvilable() {
-	    return isMealsAvilable;
+		return isMealsAvilable;
 	}
 
 	public void setMealsAvilable(boolean isMealsAvilable) {
-	    this.isMealsAvilable = isMealsAvilable;
+		this.isMealsAvilable = isMealsAvilable;
 	}
 
 	public boolean getIsLaudryAvilable() {
-	    return isLaudryAvilable;
+		return isLaudryAvilable;
 	}
 
 	public void setLaudryAvilable(boolean isLaudryAvilable) {
-	    this.isLaudryAvilable = isLaudryAvilable;
+		this.isLaudryAvilable = isLaudryAvilable;
 	}
 
 	public boolean getIsCctvAvilable() {
-	    return isCctvAvilable;
+		return isCctvAvilable;
 	}
 
 	public void setCctvAvilable(boolean isCctvAvilable) {
-	    this.isCctvAvilable = isCctvAvilable;
+		this.isCctvAvilable = isCctvAvilable;
 	}
 
 	public boolean getIsParkingAvilable() {
-	    return isParkingAvilable;
+		return isParkingAvilable;
 	}
 
 	public void setParkingAvilable(boolean isParkingAvilable) {
-	    this.isParkingAvilable = isParkingAvilable;
+		this.isParkingAvilable = isParkingAvilable;
 	}
 
 	public boolean getIsCommonAreasAvilable() {
-	    return isCommonAreasAvilable;
+		return isCommonAreasAvilable;
 	}
 
 	public void setCommonAreasAvilable(boolean isCommonAreasAvilable) {
-	    this.isCommonAreasAvilable = isCommonAreasAvilable;
+		this.isCommonAreasAvilable = isCommonAreasAvilable;
 	}
 
 	public boolean getIsStudyDeskAvilable() {
-	    return isStudyDeskAvilable;
+		return isStudyDeskAvilable;
 	}
 
 	public void setStudyDeskAvilable(boolean isStudyDeskAvilable) {
-	    this.isStudyDeskAvilable = isStudyDeskAvilable;
+		this.isStudyDeskAvilable = isStudyDeskAvilable;
 	}
 
 	public String getRoomType() {
@@ -306,8 +306,4 @@ public class Listing {
 				+ endDate + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
 	}
 
-	
-
-
-	
 }
