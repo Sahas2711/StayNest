@@ -28,23 +28,10 @@ public class Booking {
 
 	@Column(name = "end_date")
 	private Date endDate;
-
-	public double getTotalRent() {
-		return totalRent;
-	}
-
-	public void setTotalRent(double totalRent) {
-		this.totalRent = totalRent;
-	}
-
 	@Column
 	private String status;
-
 	@Column
-	private double totalRent;
-	
-	
-
+	private Double totalRent;
 	public Long getId() {
 		return id;
 	}
@@ -93,13 +80,21 @@ public class Booking {
 		this.status = status;
 	}
 
+	public Double getTotalRent() {
+		return totalRent;
+	}
+
+	public void setTotalRent(Double totalRent) {
+		this.totalRent = totalRent;
+	}
+	
 	public Booking() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
 	public Booking(Long id, User tenant, Listing listing, Date startDate, Date endDate, String status,
-			double totalRent) {
+			Double totalRent) {
 		super();
 		this.id = id;
 		this.tenant = tenant;

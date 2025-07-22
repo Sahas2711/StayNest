@@ -22,6 +22,10 @@ public interface BookingService {
 
     Booking cancelBooking(Long id);
     
+
     void updateBookingStatus(Long bookingId, String action, Owner owner);
+
+
+    double getRentForBooking(Long id , double month);
 
 }

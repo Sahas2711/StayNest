@@ -152,6 +152,7 @@ public class BookingServiceImpl implements BookingService {
         logger.info("Booking cancelled successfully with ID: {}", cancelled.getId());
         return cancelled;
     }
+
     
     @Override
     public void updateBookingStatus(Long bookingId, String action, Owner owner) {
@@ -170,7 +171,7 @@ public class BookingServiceImpl implements BookingService {
                 break;
             case "REJECT":
                 newStatus = "REJECTED";
-                booking.setTotalRent(0);
+                booking.setTotalRent(new Double(0));
                 break;
             default:
                 throw new IllegalArgumentException("Invalid action. Use 'ACCEPT' or 'REJECT'.");
@@ -249,5 +250,25 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
+
+
+
+	@Override
+	public double getRentForBooking(Long id, double month) {
+		Optional<Booking> booking = bookingRepository.findById(id);
+		if(booking.isPresent()) {
+		logger.info("Rent requested for Booking : {}",booking.get().getId());
+		double rent = booking.get().getListing().getRent();
+		logger.info("Total rent for Booking : {}",rent * month);
+		booking.get().setTotalRent(rent * month);
+		bookingRepository.save(booking.get());
+		return rent*month;
+		}
+		else {
+			logger.warn("Booking not found with id  : {}", id);
+			throw new RuntimeException("Booking not found");
+		}
+	}
+    
 
 }

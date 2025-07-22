@@ -113,6 +113,7 @@ public class BookingController {
         return bookingService.getBookingsByStatus(status);
     }
     
+
  // ✅ Accept or Reject Booking by Owner
     @PostMapping("/listing/booking/action")
     public ResponseEntity<String> handleBookingAction(@RequestParam Long bookingId,
@@ -151,6 +152,16 @@ public class BookingController {
 
         logger.warn("Authorization header missing or malformed");
         throw new RuntimeException("Authorization header is missing or invalid");
+    }
+
+
+    @GetMapping("/calculate/rent/{id}")
+    public double calculateRent(HttpServletRequest request,
+                                @RequestParam double month,
+                                @PathVariable Long id) {
+        User user = getUserFromToken(request);
+        logger.info("Fetching Rent for tenant id : {}", user.getEmail());
+        return bookingService.getRentForBooking(id, month);
     }
 
 
