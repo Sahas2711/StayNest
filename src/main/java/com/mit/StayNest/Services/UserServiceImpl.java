@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
         // Prepare dynamic HTML welcome email
         String userName = user.getName() != null ? user.getName() : "There";
         String email = user.getEmail();  // <-- Fix: you missed declaring this!
-        String browsePgLink = "http://localhost:3000/browse-pgs";
+        String browsePgLink = "http://localhost:3000/login";
         String contactFaqLink = "http://localhost:3000/contact-us";
         String subject = "Welcome to StayNest! Your Nest Away From Home Awaits!";
 

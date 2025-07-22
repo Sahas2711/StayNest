@@ -65,7 +65,7 @@ public class Listing {
 	@Column(nullable = false)
 	private Date startDate;
 
-	@Column(nullable = false)
+	
 	private Date endDate;
 
 	@CreationTimestamp

@@ -105,4 +105,14 @@ public class BookingController {
         logger.info("Fetching bookings with status: {}", status);
         return bookingService.getBookingsByStatus(status);
     }
+    
+    @GetMapping("/calculate/rent/{id}")
+    public double calculateRent(HttpServletRequest request,
+                                @RequestParam double month,
+                                @PathVariable Long id) {
+        User user = getUserFromToken(request);
+        logger.info("Fetching Rent for tenant id : {}", user.getEmail());
+        return bookingService.getRentForBooking(id, month);
+    }
+
 }

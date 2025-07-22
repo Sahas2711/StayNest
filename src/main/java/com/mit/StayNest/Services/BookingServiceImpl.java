@@ -72,4 +72,22 @@ public class BookingServiceImpl implements BookingService {
         logger.info("Booking cancelled successfully with ID: {}", cancelled.getId());
         return cancelled;
     }
+
+	@Override
+	public double getRentForBooking(Long id, double month) {
+		Optional<Booking> booking = bookingRepository.findById(id);
+		if(booking.isPresent()) {
+		logger.info("Rent requested for Booking : {}",booking.get().getId());
+		double rent = booking.get().getListing().getRent();
+		logger.info("Total rent for Booking : {}",rent * month);
+		booking.get().setTotalRent(rent * month);
+		bookingRepository.save(booking.get());
+		return rent*month;
+		}
+		else {
+			logger.warn("Booking not found with id  : {}", id);
+			throw new RuntimeException("Booking not found");
+		}
+	}
+    
 }

@@ -20,4 +20,6 @@ public interface BookingService {
     List<Booking> getBookingsByStatus(String status);
 
     Booking cancelBooking(Long id);
+    
+    double getRentForBooking(Long id , double month);
 }
