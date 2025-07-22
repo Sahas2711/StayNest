@@ -170,6 +170,7 @@ public class BookingServiceImpl implements BookingService {
                 break;
             case "REJECT":
                 newStatus = "REJECTED";
+                booking.setTotalRent(0);
                 break;
             default:
                 throw new IllegalArgumentException("Invalid action. Use 'ACCEPT' or 'REJECT'.");
