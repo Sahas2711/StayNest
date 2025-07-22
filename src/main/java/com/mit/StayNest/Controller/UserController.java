@@ -67,7 +67,7 @@ public class UserController {
         User user = getUserFromJwt(authHeader);
         logger.info("User {} is updating their profile", user.getEmail());
        
-        return userService.updateUser(updatedUserData);
+        return userService.updateUser(user.getEmail(),updatedUserData);
     }
 
     @DeleteMapping("/users/delete")

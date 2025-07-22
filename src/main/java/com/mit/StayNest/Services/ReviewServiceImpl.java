@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mit.StayNest.Entity.Review;
+import com.mit.StayNest.Entity.User;
 import com.mit.StayNest.Repository.ReviewRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,8 +40,9 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Review updateReview(Review review) {
+    public Review updateReview(User user,Review review) {
     	logger.info("Updating review with ID: {}", review.getId());
+    	
         if (!reviewRepository.existsById(review.getId())) {
         	 logger.warn("Review not found with ID: {}", review.getId());
             throw new RuntimeException("Review not found with ID: " + review.getId());

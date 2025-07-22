@@ -5,7 +5,7 @@ import com.mit.StayNest.Entity.Listing;
 import com.mit.StayNest.Entity.Owner;
 import com.mit.StayNest.Entity.User;
 import com.mit.StayNest.Repository.BookingRepository;
-
+import com.mit.StayNest.Services.ListingServiceImpl;
 import jakarta.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,20 +30,24 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     private JavaMailSender javaMailSender;
 
+    @Autowired
+    private ListingServiceImpl listingServiceImpl;
     @Override
     public Booking createBooking(Booking booking) {
     	logger.info("Creating booking for listing ID: {} by tenant ID: {}",
                 booking.getListing().getId(), booking.getTenant().getId());
 
+    	booking.setListing(listingServiceImpl.getSpecificListing(booking.getListing().getId()));
         booking.setStatus("PENDING");
 
-        booking.setStatus("NOT BOOKED");
-
-
         Booking saved = bookingRepository.save(booking);
+        
         logger.info("Booking created successfully with ID: {}", saved.getId());
         
         Owner owner = booking.getListing().getOwner();
+        
+        logger.info("Owner fetched from db : " + owner.getEmail());
+        
         User tenant = booking.getTenant();    
         
         String subject = "New Booking Request on StayNest";

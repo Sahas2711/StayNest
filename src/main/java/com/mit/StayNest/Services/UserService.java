@@ -17,7 +17,7 @@ public interface UserService {
 	
 	public User currentUser(User user);
 	
-	public User updateUser(User user);
+	public User updateUser(String email,User user);
 	
 	public User deleteUser(User user);
 	

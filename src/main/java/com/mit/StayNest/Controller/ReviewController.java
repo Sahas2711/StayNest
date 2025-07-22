@@ -94,7 +94,7 @@ public class ReviewController {
             User user = getUserFromToken(request);
             logger.info("User {} updating review ID {}", user.getEmail(), review.getId());
 
-            Review updated = reviewService.updateReview(review);
+            Review updated = reviewService.updateReview(user,review);
             return ResponseEntity.ok(updated);
         } catch (RuntimeException e) {
             logger.error("Update failed: {}", e.getMessage(), e);

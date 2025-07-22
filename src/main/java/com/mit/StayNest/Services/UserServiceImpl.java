@@ -249,9 +249,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(User user) {
-        logger.info("Updating user with email: {}", user.getEmail());
-        Optional<User> currentUser = userRepo.findByEmail(user.getEmail());
+    public User updateUser(String email , User user) {
+        logger.info("Updating user with email: {}", email);
+        Optional<User> currentUser = userRepo.findByEmail(email);
 
         if (currentUser.isPresent()) {
             User existingUser = currentUser.get();
