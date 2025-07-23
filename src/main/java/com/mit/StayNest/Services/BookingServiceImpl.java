@@ -227,7 +227,7 @@ public class BookingServiceImpl implements BookingService {
             + "                    <p class=\"status\">" + newStatus + "</p>"
             + "                    <p>You can view more details or check other listings in your StayNest dashboard.</p>"
             + "                    <div class=\"button-container\">"
-            + "                        <a href=\"http://localhost:3000/user-dashboard\" class=\"button\" target=\"_blank\">Go to Dashboard</a>"
+            + "                        <a href=\"http://localhost:3000/login\" class=\"button\" target=\"_blank\">Go to Dashboard</a>"
             + "                    </div>"
             + "                    <p>Thank you for using StayNest!<br>The StayNest Team</p>"
             + "                </td></tr>"
@@ -272,6 +272,16 @@ public class BookingServiceImpl implements BookingService {
 			logger.warn("Booking not found with id  : {}", id);
 			throw new RuntimeException("Booking not found");
 		}
+	}
+
+	@Override
+	public List<Booking> getBookingsByOwner(Owner owner) {
+		// TODO Auto-generated method stub
+		Long id = owner.getId();
+		logger.info("Owner with id {} accessing for bookings",id);
+		List<Booking> result = bookingRepository.getBookingsByOwner(id);
+		logger.info("Total bookings found for owner {} " + result.size());
+		return result;
 	}
     
 

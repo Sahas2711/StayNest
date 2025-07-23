@@ -28,4 +28,5 @@ public interface BookingService {
 
     double getRentForBooking(Long id , double month);
 
+    List<Booking> getBookingsByOwner(Owner owner);
 }

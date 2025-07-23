@@ -138,6 +138,12 @@ public class BookingController {
         }
     }
     
+    @GetMapping("/owner")
+    private List<Booking> getBookingsByOwner(HttpServletRequest request){
+    	Owner owner = getOwnerFromToken(request);
+    	logger.info("Owner attempting to see the bookings email {}" , owner.getEmail());
+    	return bookingService.getBookingsByOwner(owner);
+    }
     private Owner getOwnerFromToken(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
 
@@ -163,6 +169,7 @@ public class BookingController {
         logger.info("Fetching Rent for tenant id : {}", user.getEmail());
         return bookingService.getRentForBooking(id, month);
     }
-
+    
+    
 
 }

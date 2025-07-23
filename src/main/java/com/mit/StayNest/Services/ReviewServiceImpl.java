@@ -72,4 +72,5 @@ public class ReviewServiceImpl implements ReviewService {
     	 logger.info("Fetching reviews for tenant ID: {}", tenantId);
         return reviewRepository.findByTenantId(tenantId);
     }
+    
 }
