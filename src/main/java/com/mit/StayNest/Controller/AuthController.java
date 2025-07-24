@@ -10,7 +10,7 @@ import com.mit.StayNest.Repository.UserRepository;
 import com.mit.StayNest.Security.JwtHelper;
 import com.mit.StayNest.Services.CustomUserDetailsService;
 import com.mit.StayNest.Services.MailService;
-import com.mit.StayNest.Services.OwnerDetailsService;
+//import com.mit.StayNest.Services.OwnerDetailsService;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -47,8 +47,8 @@ public class AuthController {
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
 	
-	@Autowired
-	private OwnerDetailsService ownerDetailsService;
+//	@Autowired
+//	private OwnerDetailsService ownerDetailsService;
 
 
     @Autowired
@@ -73,95 +73,131 @@ public class AuthController {
     @Autowired 
     private JavaMailSender javaMailSender;
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
-
+    
     @PostMapping("/login/user")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest request) {
         logger.info("Login attempt as USER for email: {}", request.getEmail());
 
-        // Check user existence
-        User user = userRepo.findByEmail(request.getEmail()).orElse(null);
-        if (user == null) {
-            logger.warn("Login failed: USER not found for {}", request.getEmail());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password.");
+        try {
+            // 1. Authenticate with AuthenticationManager
+            Authentication authentication = manager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
+
+            // 2. Load UserDetails from UserDetailsService
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(request.getEmail());
+
+            // 3. Generate JWT Token
+            String token = helper.generateToken(userDetails);
+
+            // 4. Fetch User entity for additional info
+            User user = userRepo.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found after auth."));
+
+            JwtResponse response = new JwtResponse(token, user.getName(), user.getId());
+            logger.info("Login successful as USER: {}", request.getEmail());
+            return ResponseEntity.ok(response);
+
+        } catch (BadCredentialsException ex) {
+            logger.warn("Login failed for USER: Invalid credentials for {}", request.getEmail());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid email or password (USER)"));
+        } catch (Exception e) {
+            logger.error("Unexpected error during USER login", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Something went wrong. Please try again."));
         }
-
-        // Check password manually to avoid infinite loop
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            logger.warn("Login failed: Incorrect USER password for {}", request.getEmail());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password.");
-        }
-
-        // Authentication success - generate JWT
-        String token = helper.generateToken(new org.springframework.security.core.userdetails.User(
-                user.getEmail(), user.getPassword(), new ArrayList<>()
-        ));
-
-        JwtResponse response = new JwtResponse(token, user.getName(), user.getId());
-        logger.info("Login successful as USER: {}", request.getEmail());
-        return ResponseEntity.ok(response);
     }
-//    @PostMapping("/login/owner")
-//    public ResponseEntity<?> loginOwner(@RequestBody LoginRequest request) {
-//        logger.info("Login attempt as OWNER for email: {}", request.getEmail());
+
+
+//    @PostMapping("/login/user")
+//    public ResponseEntity<?> loginUser(@RequestBody LoginRequest request) {
+//        logger.info("Login attempt as USER for email: {}", request.getEmail());
 //
-//        try {
-//            // 1. Authenticate with AuthenticationManager
-//            Authentication authentication = manager.authenticate(
-//                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-//            );
-//
-//            // 2. Load details from OwnerDetailsService (ensure this loads Owner entity)
-//            UserDetails userDetails = ownerDetailsService.loadUserByUsername(request.getEmail());
-//
-//            // 3. Generate JWT Token
-//            String token = helper.generateToken(userDetails);
-//
-//            // 4. Fetch additional info from Owner entity
-//            Owner owner = ownerRepo.findByEmail(request.getEmail())
-//                .orElseThrow(() -> new RuntimeException("Owner not found after auth."));
-//
-//            JwtResponse response = new JwtResponse(token, owner.getName(), owner.getId());
-//            logger.info("Login successful as OWNER: {}", request.getEmail());
-//            return ResponseEntity.ok(response);
-//
-//        } catch (BadCredentialsException ex) {
-//            logger.warn("Login failed for OWNER: Invalid credentials for {}", request.getEmail());
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-//                    .body(Map.of("error", "Invalid email or password (OWNER)"));
-//        } catch (Exception e) {
-//            logger.error("Unexpected error during OWNER login", e);
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body(Map.of("error", "Something went wrong. Please try again."));
+//        // Check user existence
+//        User user = userRepo.findByEmail(request.getEmail()).orElse(null);
+//        if (user == null) {
+//            logger.warn("Login failed: USER not found for {}", request.getEmail());
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password.");
 //        }
+//
+//        // Check password manually to avoid infinite loop
+//        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+//            logger.warn("Login failed: Incorrect USER password for {}", request.getEmail());
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password.");
+//        }
+//
+//        // Authentication success - generate JWT
+//        String token = helper.generateToken(new org.springframework.security.core.userdetails.User(
+//                user.getEmail(), user.getPassword(), new ArrayList<>()
+//        ));
+//
+//        JwtResponse response = new JwtResponse(token, user.getName(), user.getId());
+//        logger.info("Login successful as USER: {}", request.getEmail());
+//        return ResponseEntity.ok(response);
 //    }
-
-
     @PostMapping("/login/owner")
     public ResponseEntity<?> loginOwner(@RequestBody LoginRequest request) {
         logger.info("Login attempt as OWNER for email: {}", request.getEmail());
 
-        // Check owner existence
-        Owner owner = ownerRepo.findByEmail(request.getEmail()).orElse(null);
-        if (owner == null) {
-            logger.warn("Login failed: OWNER not found for {}", request.getEmail());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password.");
+        try {
+            // 1. Authenticate with AuthenticationManager
+            Authentication authentication = manager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
+
+            // 2. Load details from OwnerDetailsService (ensure this loads Owner entity)
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(request.getEmail());
+
+            // 3. Generate JWT Token
+            String token = helper.generateToken(userDetails);
+
+            // 4. Fetch additional info from Owner entity
+            Owner owner = ownerRepo.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("Owner not found after auth."));
+
+            JwtResponse response = new JwtResponse(token, owner.getName(), owner.getId());
+            logger.info("Login successful as OWNER: {}", request.getEmail());
+            return ResponseEntity.ok(response);
+
+        } catch (BadCredentialsException ex) {
+            logger.warn("Login failed for OWNER: Invalid credentials for {}", request.getEmail());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid email or password (OWNER)"));
+        } catch (Exception e) {
+            logger.error("Unexpected error during OWNER login", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Something went wrong. Please try again."));
         }
-
-        // Check password manually
-        if (!passwordEncoder.matches(request.getPassword(), owner.getPassword())) {
-            logger.warn("Login failed: Incorrect OWNER password for {}", request.getEmail());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password.");
-        }
-
-        // Authentication success - generate JWT
-        String token = helper.generateToken(new org.springframework.security.core.userdetails.User(
-                owner.getEmail(), owner.getPassword(), new ArrayList<>()
-        ));
-
-        JwtResponse response = new JwtResponse(token, owner.getName(), owner.getId());
-        logger.info("Login successful as OWNER: {}", request.getEmail());
-        return ResponseEntity.ok(response);
     }
+
+
+//    @PostMapping("/login/owner")
+//    public ResponseEntity<?> loginOwner(@RequestBody LoginRequest request) {
+//        logger.info("Login attempt as OWNER for email: {}", request.getEmail());
+//
+//        // Check owner existence
+//        Owner owner = ownerRepo.findByEmail(request.getEmail()).orElse(null);
+//        if (owner == null) {
+//            logger.warn("Login failed: OWNER not found for {}", request.getEmail());
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password.");
+//        }
+//
+//        // Check password manually
+//        if (!passwordEncoder.matches(request.getPassword(), owner.getPassword())) {
+//            logger.warn("Login failed: Incorrect OWNER password for {}", request.getEmail());
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password.");
+//        }
+//
+//        // Authentication success - generate JWT
+//        String token = helper.generateToken(new org.springframework.security.core.userdetails.User(
+//                owner.getEmail(), owner.getPassword(), new ArrayList<>()
+//        ));
+//
+//        JwtResponse response = new JwtResponse(token, owner.getName(), owner.getId());
+//        logger.info("Login successful as OWNER: {}", request.getEmail());
+//        return ResponseEntity.ok(response);
+//    }
 
 
     @PostMapping("/forgot-password")

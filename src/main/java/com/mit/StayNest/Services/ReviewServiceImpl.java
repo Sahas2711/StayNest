@@ -72,5 +72,10 @@ public class ReviewServiceImpl implements ReviewService {
     	 logger.info("Fetching reviews for tenant ID: {}", tenantId);
         return reviewRepository.findByTenantId(tenantId);
     }
+    @Override
+    public List<Review> getReviewsByOwnerId(Long ownerId) {
+        logger.info("Fetching reviews for all listings owned by owner ID: {}", ownerId);
+        return reviewRepository.findByListingOwnerId(ownerId);
+    }
     
 }

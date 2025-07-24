@@ -13,4 +13,5 @@ public interface ReviewService {
     void deleteReviewById(Long id);
     List<Review> getReviewsByListingId(Long listingId);
     List<Review> getReviewsByTenantId(Long tenantId);
+    List<Review> getReviewsByOwnerId(Long ownerId);
 }

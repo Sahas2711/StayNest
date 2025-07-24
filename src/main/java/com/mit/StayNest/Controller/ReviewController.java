@@ -133,4 +133,11 @@ public class ReviewController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+    
+    @GetMapping("/owner/{ownerId}")
+    public ResponseEntity<List<Review>> getReviewsByOwner(@PathVariable Long ownerId) {
+        logger.info("Fetching all reviews for owner ID: {}", ownerId);
+        List<Review> reviews = reviewService.getReviewsByOwnerId(ownerId);
+        return ResponseEntity.ok(reviews);
+    }
 }

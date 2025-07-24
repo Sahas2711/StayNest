@@ -32,6 +32,7 @@ public class Booking {
 	private String status;
 	@Column
 	private Double totalRent;
+	
 	public Long getId() {
 		return id;
 	}

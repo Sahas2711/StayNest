@@ -11,4 +11,5 @@ import com.mit.StayNest.Entity.Review;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByListingId(Long listingId);
     List<Review> findByTenantId(Long tenantId);
+    List<Review> findByListingOwnerId(Long ownerId);
 }
