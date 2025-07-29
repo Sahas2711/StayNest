@@ -1,12 +1,16 @@
 package com.mit.StayNest.Entity;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.*;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 @Entity
 @Table(name = "pg_listings")
 public class Listing {
@@ -53,26 +57,35 @@ public class Listing {
 	@Column(nullable = false)
 	private Double discount;
 
-	@Column(nullable = false)
-	private String url;
 
 	@Column(nullable = false, length = 1000)
 	private String description;
 
-	@Column(nullable = false)
-	private String roomType;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "listing_id") // Optional: to avoid a join table
+	private List<RoomTypeDetails> roomDetails;
 
+	@Lob
+	@Column(name = "urls", nullable = false, columnDefinition = "LONGTEXT")
+	private String urlsString;
+
+	@Transient
+	private List<String> urls;
+	
 	@Column(nullable = false)
 	private Date startDate;
 
-	
 	private Date endDate;
 
+	
 	@CreationTimestamp
 	private Date createdAt;
 
 	@UpdateTimestamp
 	private Date updatedAt;
+
+	private static final ObjectMapper objectMapper = new ObjectMapper();
+
 
 	public Long getId() {
 		return id;
@@ -114,6 +127,70 @@ public class Listing {
 		this.gender = gender;
 	}
 
+	public boolean isWifiAvilable() {
+		return isWifiAvilable;
+	}
+
+	public void setWifiAvilable(boolean isWifiAvilable) {
+		this.isWifiAvilable = isWifiAvilable;
+	}
+
+	public boolean isAcAvilable() {
+		return isAcAvilable;
+	}
+
+	public void setAcAvilable(boolean isAcAvilable) {
+		this.isAcAvilable = isAcAvilable;
+	}
+
+	public boolean isMealsAvilable() {
+		return isMealsAvilable;
+	}
+
+	public void setMealsAvilable(boolean isMealsAvilable) {
+		this.isMealsAvilable = isMealsAvilable;
+	}
+
+	public boolean isLaudryAvilable() {
+		return isLaudryAvilable;
+	}
+
+	public void setLaudryAvilable(boolean isLaudryAvilable) {
+		this.isLaudryAvilable = isLaudryAvilable;
+	}
+
+	public boolean isCctvAvilable() {
+		return isCctvAvilable;
+	}
+
+	public void setCctvAvilable(boolean isCctvAvilable) {
+		this.isCctvAvilable = isCctvAvilable;
+	}
+
+	public boolean isParkingAvilable() {
+		return isParkingAvilable;
+	}
+
+	public void setParkingAvilable(boolean isParkingAvilable) {
+		this.isParkingAvilable = isParkingAvilable;
+	}
+
+	public boolean isCommonAreasAvilable() {
+		return isCommonAreasAvilable;
+	}
+
+	public void setCommonAreasAvilable(boolean isCommonAreasAvilable) {
+		this.isCommonAreasAvilable = isCommonAreasAvilable;
+	}
+
+	public boolean isStudyDeskAvilable() {
+		return isStudyDeskAvilable;
+	}
+
+	public void setStudyDeskAvilable(boolean isStudyDeskAvilable) {
+		this.isStudyDeskAvilable = isStudyDeskAvilable;
+	}
+
 	public Double getRent() {
 		return rent;
 	}
@@ -138,14 +215,6 @@ public class Listing {
 		this.discount = discount;
 	}
 
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
 	public String getDescription() {
 		return description;
 	}
@@ -154,76 +223,12 @@ public class Listing {
 		this.description = description;
 	}
 
-	public boolean getIsWifiAvilable() {
-		return isWifiAvilable;
+	public List<RoomTypeDetails> getRoomDetails() {
+		return roomDetails;
 	}
 
-	public void setWifiAvilable(boolean isWifiAvilable) {
-		this.isWifiAvilable = isWifiAvilable;
-	}
-
-	public boolean getIsAcAvilable() {
-		return isAcAvilable;
-	}
-
-	public void setAcAvilable(boolean isAcAvilable) {
-		this.isAcAvilable = isAcAvilable;
-	}
-
-	public boolean getIsMealsAvilable() {
-		return isMealsAvilable;
-	}
-
-	public void setMealsAvilable(boolean isMealsAvilable) {
-		this.isMealsAvilable = isMealsAvilable;
-	}
-
-	public boolean getIsLaudryAvilable() {
-		return isLaudryAvilable;
-	}
-
-	public void setLaudryAvilable(boolean isLaudryAvilable) {
-		this.isLaudryAvilable = isLaudryAvilable;
-	}
-
-	public boolean getIsCctvAvilable() {
-		return isCctvAvilable;
-	}
-
-	public void setCctvAvilable(boolean isCctvAvilable) {
-		this.isCctvAvilable = isCctvAvilable;
-	}
-
-	public boolean getIsParkingAvilable() {
-		return isParkingAvilable;
-	}
-
-	public void setParkingAvilable(boolean isParkingAvilable) {
-		this.isParkingAvilable = isParkingAvilable;
-	}
-
-	public boolean getIsCommonAreasAvilable() {
-		return isCommonAreasAvilable;
-	}
-
-	public void setCommonAreasAvilable(boolean isCommonAreasAvilable) {
-		this.isCommonAreasAvilable = isCommonAreasAvilable;
-	}
-
-	public boolean getIsStudyDeskAvilable() {
-		return isStudyDeskAvilable;
-	}
-
-	public void setStudyDeskAvilable(boolean isStudyDeskAvilable) {
-		this.isStudyDeskAvilable = isStudyDeskAvilable;
-	}
-
-	public String getRoomType() {
-		return roomType;
-	}
-
-	public void setRoomType(String roomType) {
-		this.roomType = roomType;
+	public void setRoomDetails(List<RoomTypeDetails> roomDetails) {
+		this.roomDetails = roomDetails;
 	}
 
 	public Date getStartDate() {
@@ -258,6 +263,24 @@ public class Listing {
 		this.updatedAt = updatedAt;
 	}
 
+	public List<String> getUrls() {
+	    try {
+	        return objectMapper.readValue(urlsString, List.class);
+	    } catch (Exception e) {
+	        return new ArrayList<>();
+	    }
+	}
+
+	public void setUrls(List<String> urls) {
+	    this.urls = urls;
+	    try {
+	        this.urlsString = objectMapper.writeValueAsString(urls);
+	    } catch (JsonProcessingException e) {
+	        this.urlsString = "[]";
+	    }
+	}
+
+	
 	public Listing() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -266,8 +289,8 @@ public class Listing {
 	public Listing(Long id, Owner owner, String title, String address, String gender, boolean isWifiAvilable,
 			boolean isAcAvilable, boolean isMealsAvilable, boolean isLaudryAvilable, boolean isCctvAvilable,
 			boolean isParkingAvilable, boolean isCommonAreasAvilable, boolean isStudyDeskAvilable, Double rent,
-			Double deposite, Double discount, String url, String description, String roomType, Date startDate,
-			Date endDate, Date createdAt, Date updatedAt) {
+			Double deposite, Double discount, String description, List<RoomTypeDetails> roomDetails, String urlsString,
+			List<String> urls, Date startDate, Date endDate, Date createdAt, Date updatedAt) {
 		super();
 		this.id = id;
 		this.owner = owner;
@@ -285,9 +308,10 @@ public class Listing {
 		this.rent = rent;
 		this.deposite = deposite;
 		this.discount = discount;
-		this.url = url;
 		this.description = description;
-		this.roomType = roomType;
+		this.roomDetails = roomDetails;
+		this.urlsString = urlsString;
+		this.urls = urls;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.createdAt = createdAt;
@@ -301,9 +325,12 @@ public class Listing {
 				+ ", isMealsAvilable=" + isMealsAvilable + ", isLaudryAvilable=" + isLaudryAvilable
 				+ ", isCctvAvilable=" + isCctvAvilable + ", isParkingAvilable=" + isParkingAvilable
 				+ ", isCommonAreasAvilable=" + isCommonAreasAvilable + ", isStudyDeskAvilable=" + isStudyDeskAvilable
-				+ ", rent=" + rent + ", deposite=" + deposite + ", discount=" + discount + ", url=" + url
-				+ ", description=" + description + ", roomType=" + roomType + ", startDate=" + startDate + ", endDate="
-				+ endDate + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
+				+ ", rent=" + rent + ", deposite=" + deposite + ", discount=" + discount + ", description="
+				+ description + ", roomDetails=" + roomDetails + ", urlsString=" + urlsString + ", urls=" + urls
+				+ ", startDate=" + startDate + ", endDate=" + endDate + ", createdAt=" + createdAt + ", updatedAt="
+				+ updatedAt + "]";
 	}
 
+
+	
 }
