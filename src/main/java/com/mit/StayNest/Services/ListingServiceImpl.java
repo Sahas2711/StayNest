@@ -34,6 +34,7 @@ public class ListingServiceImpl implements ListingService {
 
 	@Autowired
 	BookingRepository bookingRepo;
+	
 	@Override
 	public Listing createListing(Listing listing) {
 		Long id = listing.getOwner().getId();
@@ -60,7 +61,9 @@ public class ListingServiceImpl implements ListingService {
 	@Override
 	public List<Listing> getAllListing() {
 		logger.info("Fetching all listings");
-		return listingRepo.findAll();
+		List<Listing> allListing = listingRepo.findAll();
+		logger.info("Total no. of Listings : {} " , allListing.size());
+		return allListing;
 	}
 
 	@Override

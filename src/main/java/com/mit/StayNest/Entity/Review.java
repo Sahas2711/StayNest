@@ -35,7 +35,7 @@ public class Review {
 	@Column(nullable = false)
 	private Long rating;
 	
-	@Column(nullable = false)
+	@Column(nullable = false,length = 1000)
 	private String feedback;
 
 	@Column

@@ -33,6 +33,9 @@ public class Booking {
 	@Column
 	private Double totalRent;
 	
+	@Column
+	private String roomType;
+	
 	public Long getId() {
 		return id;
 	}
@@ -89,6 +92,15 @@ public class Booking {
 		this.totalRent = totalRent;
 	}
 	
+	
+	public String getRoomType() {
+		return roomType;
+	}
+
+	public void setRoomType(String roomType) {
+		this.roomType = roomType;
+	}
+
 	public Booking() {
 		super();
 		// TODO Auto-generated constructor stub
