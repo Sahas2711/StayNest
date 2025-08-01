@@ -68,21 +68,43 @@ public class ListingServiceImpl implements ListingService {
 
 	@Override
 	public Listing updateListing(Listing listing) {
-		logger.info("Updating listing with ID: {}", listing.getId());
-		Optional<Listing> existingListing = listingRepo.findById(listing.getId());
+	    logger.info("Updating listing with ID: {}", listing.getId());
+	    Optional<Listing> existingListing = listingRepo.findById(listing.getId());
 
-		if (existingListing.isPresent()) {
-			Listing updatedListing = existingListing.get();
-			updatedListing.setTitle(listing.getTitle());
-			updatedListing.setOwner(listing.getOwner());
-			updatedListing.setRent(listing.getRent());
-			updatedListing.setAddress(listing.getAddress());
-			logger.info("Listing updated successfully with ID: {}", updatedListing.getId());
-			return listingRepo.save(updatedListing);
-		} else {
-			logger.warn("Listing not found for update with ID: {}", listing.getId());
-			throw new RuntimeException("Listing not found with ID: " + listing.getId());
-		}
+	    if (existingListing.isPresent()) {
+	        Listing updatedListing = existingListing.get();
+	        updatedListing.setTitle(listing.getTitle());
+	        updatedListing.setOwner(listing.getOwner());
+	        updatedListing.setRent(listing.getRent());
+	        updatedListing.setAddress(listing.getAddress());
+	        
+	        // ✅ Add missing fields
+	        updatedListing.setGender(listing.getGender());
+	        updatedListing.setDescription(listing.getDescription());
+	        updatedListing.setDiscount(listing.getDiscount());
+	        updatedListing.setDeposite(listing.getDeposite());
+	        updatedListing.setStartDate(listing.getStartDate());
+	        updatedListing.setEndDate(listing.getEndDate());
+
+	        updatedListing.setAcAvilable(listing.isAcAvilable());
+	        updatedListing.setWifiAvilable(listing.isWifiAvilable());
+	        updatedListing.setCctvAvilable(listing.isCctvAvilable());
+	        updatedListing.setMealsAvilable(listing.isMealsAvilable());
+	        updatedListing.setLaudryAvilable(listing.isLaudryAvilable());
+	        updatedListing.setParkingAvilable(listing.isParkingAvilable());
+	        updatedListing.setCommonAreasAvilable(listing.isCommonAreasAvilable());
+	        updatedListing.setStudyDeskAvilable(listing.isStudyDeskAvilable());
+
+	        
+	        updatedListing.setRoomDetails(listing.getRoomDetails());
+	        updatedListing.setUrls(listing.getUrls());
+
+	        logger.info("Listing updated successfully with ID: {}", updatedListing.getId());
+	        return listingRepo.save(updatedListing);
+	    } else {
+	        logger.warn("Listing not found for update with ID: {}", listing.getId());
+	        throw new RuntimeException("Listing not found with ID: " + listing.getId());
+	    }
 	}
 
 	@Override
