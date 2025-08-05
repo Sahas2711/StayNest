@@ -1,9 +1,9 @@
 package com.mit.StayNest.Controller;
 
-import com.mit.StayNest.Entity.JwtRequest;
-import com.mit.StayNest.Entity.JwtResponse;
 import com.mit.StayNest.Entity.Owner;
 import com.mit.StayNest.Entity.User;
+import com.mit.StayNest.Payloads.JwtRequest;
+import com.mit.StayNest.Payloads.JwtResponse;
 import com.mit.StayNest.Payloads.LoginRequest;
 import com.mit.StayNest.Repository.OwnerRepository;
 import com.mit.StayNest.Repository.UserRepository;

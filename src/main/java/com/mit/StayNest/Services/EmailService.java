@@ -90,7 +90,7 @@ public class EmailService {
                 + "<head>"
                 + "    <meta charset='UTF-8'>"
                 + "    <meta name='viewport' content='width=device-width, initial-scale=1.0'>"
-                + "    <title>Booking Confirmation</title>"
+                + "    <title>Booking " +  booking.getStatus()+ "</title>"
                 + "    <link href='https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@400;700&display=swap' rel='stylesheet'>"
                 + "    <style>"
                 + "        body { font-family: 'Poppins', Arial, sans-serif; background-color: #f9f7ff; margin: 0; padding: 0; color: #5e4b8b; }"
@@ -108,7 +108,7 @@ public class EmailService {
                 + "<body>"
                 + "    <div class='container'>"
                 + "        <div class='header'>"
-                + "            StayNest - Booking Confirmed!"
+                + "            Your Booking Status update "
                 + "        </div>"
                 + "        <div class='content'>"
                 + "            <h2>Hi " + tenant.getName() + ",</h2>"
@@ -124,8 +124,14 @@ public class EmailService {
                 + "                <p>Your Booking ID: <strong style='color: #7c5ff0;'>" + booking.getId() + "</strong></p>"
                 + "                <p>Booking Status: <strong style='color: #ff9f59;'>" + booking.getStatus() + "</strong></p>"
                 + "            </div>"
-                + "            <p>The owner, <strong style='color: #5e4b8b;'>" + ownerName + "</strong>, has been notified and will get in touch with you shortly.</p>"
-                + "            <p>For any queries, you can contact the owner at: <span style='color: #5e4b8b;'>" + ownerPhone + "</span> or email: <span style='color: #5e4b8b;'>" + ownerEmail + "</span></p>"
+                + "            <br>"
+                + "            <div class='details'>"
+                + "                <p><strong>Owner Details:</strong></p>"
+                + "                <p>Name: <span style='color: #5e4b8b;'>" + ownerName + "</span></p>"
+                + "                <p>Phone: <span style='color: #5e4b8b;'>" + ownerPhone + "</span></p>"
+                + "                <p>Email: <span style='color: #5e4b8b;'>" + ownerEmail + "</span></p>"
+                + "            </div>"
+                + "            <p>The owner has been notified and will get in touch with you shortly.</p>"
                 + "            <p>Thank you for choosing StayNest for your accommodation needs!</p>"
                 + "            <div style='text-align: center; margin-top: 25px;'>"
                 + "                <a href='http://localhost:3000/tenant/dashboard' class='button'>Go to Your Dashboard</a>"
@@ -138,7 +144,6 @@ public class EmailService {
                 + "</body>"
                 + "</html>";
     }
-
     private String buildOwnerBookingNotificationHtml(Owner owner, Listing listing, User tenant, String selectedRoomType, Booking booking) {
         long durationMonths = 0;
         if (booking.getStartDate() != null && booking.getEndDate() != null) {

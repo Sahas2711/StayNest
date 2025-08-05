@@ -134,25 +134,7 @@ public class RoomTypeDetails {
 	        throw new IllegalStateException("No rooms available for this room type");
 	    }
 	}
-	public void incrementBedCount() {
-	    logger.info("Incrementing bed count");
-
-	    if (bedsPerRoom <= 0) {
-	        throw new IllegalStateException("Invalid configuration: bedsPerRoom must be > 0");
-	    }
-
-	    if (avilableBedsPerRoom <= 0) {
-	        throw new IllegalStateException("No available beds to decrement");
-	    }
-
-	    // Decrement 1 bed
-	    avilableBedsPerRoom++;
-
-	    // Recalculate roomCount based on remaining beds
-	    roomCount = avilableBedsPerRoom / bedsPerRoom;
-
-	    logger.info("Updated roomCount = {}, availableBeds = {}", roomCount, avilableBedsPerRoom);
-	}
+	
 	@PrePersist
 	public void onCreate() {
 	    this.avilableBedsPerRoom = this.bedsPerRoom * this.roomCount;

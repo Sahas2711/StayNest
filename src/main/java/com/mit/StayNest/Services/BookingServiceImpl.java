@@ -54,31 +54,6 @@ public class BookingServiceImpl implements BookingService {
 
         String selectedRoomType = booking.getRoomType();
 
-        boolean roomFound = false;
-        for (RoomTypeDetails roomDetail : listing.getRoomDetails()) {
-        	
-            if (roomDetail.getRoomType().equals(selectedRoomType)) {
-            	if(selectedRoomType.equals("private")) {
-                roomDetail.decrementRoomCount();
-                logger.info("Decremented room count for room type '{}' on listing ID: {}", selectedRoomType, listing.getId());
-            }
-            	else {
-            		roomDetail.decrementBedCount();
-            		logger.info("Decremented bed count for shared pg {} " , listing.getId());
-            	}
-            	roomFound = true;
-            }
-        	
-        }
-
-        if (!roomFound) {
-            logger.warn("Selected room type '{}' not found in listing ID: {}", selectedRoomType, listing.getId());
-            throw new RuntimeException("Selected room type not available for this listing.");
-        }
-
-        listingRepository.save(listing);
-        logger.info("Listing ID {} saved after room count update.", listing.getId());
-
         Booking saved = bookingRepository.save(booking);
         logger.info("Booking created successfully with ID: {}", saved.getId());
 
@@ -144,28 +119,37 @@ public class BookingServiceImpl implements BookingService {
         }
         String selectedRoomType = booking.getRoomType();
         String newStatus;
+        boolean roomFound;
         switch (action.toUpperCase()) {
             case "ACCEPT":
                 newStatus = "ACCEPTED";
-                break;
-            case "REJECT":
-                newStatus = "REJECTED";
-                boolean roomFound = false;
+                 selectedRoomType = booking.getRoomType();
+
+                 roomFound = false;
                 for (RoomTypeDetails roomDetail : listing.getRoomDetails()) {
                 	
                     if (roomDetail.getRoomType().equals(selectedRoomType)) {
                     	if(selectedRoomType.equals("private")) {
-                        roomDetail.incrementRoomCount();
+                        roomDetail.decrementRoomCount();
                         logger.info("Decremented room count for room type '{}' on listing ID: {}", selectedRoomType, listing.getId());
                     }
                     	else {
-                    		roomDetail.incrementBedCount();
+                    		roomDetail.decrementBedCount();
                     		logger.info("Decremented bed count for shared pg {} " , listing.getId());
                     	}
                     	roomFound = true;
                     }
                 	
                 }
+
+                if (!roomFound) {
+                    logger.warn("Selected room type '{}' not found in listing ID: {}", selectedRoomType, listing.getId());
+                    throw new RuntimeException("Selected room type not available for this listing.");
+                }
+                break;
+            case "REJECT":
+                newStatus = "REJECTED";
+                 roomFound = false;
                 booking.setTotalRent(new Double(0));
                 
                 break;
@@ -182,67 +166,7 @@ public class BookingServiceImpl implements BookingService {
 
         String subject = "Your Booking on StayNest has been " + newStatus;
 
-//        String htmlBody = "<!DOCTYPE html>"
-//            + "<html lang=\"en\">"
-//            + "<head>"
-//            + "    <meta charset=\"UTF-8\">"
-//            + "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">"
-//            + "    <title>Booking Status Update</title>"
-//            + "    <style>"
-//            + "        body { font-family: Arial, sans-serif; background-color: #f8f8f8; margin: 0; padding: 0; -webkit-text-size-adjust: none; width: 100% !important; }"
-//            + "        table { border-collapse: collapse; width: 100%; }"
-//            + "        td { padding: 0; }"
-//            + "        .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }"
-//            + "        .header { background: linear-gradient(to right, #6AAEFF, #6AD1FF); padding: 20px; text-align: center; }"
-//            + "        .header h1 { color: #ffffff; font-size: 28px; margin: 0; font-weight: bold; }"
-//            + "        .content { padding: 30px; color: #333333; line-height: 1.6; }"
-//            + "        .content p { margin-bottom: 15px; font-size: 16px; }"
-//            + "        .status { font-weight: bold; color: " + (newStatus.equals("ACCEPTED") ? "#28a745" : "#dc3545") + "; font-size: 18px; }"
-//            + "        .button-container { text-align: center; padding: 20px 0; }"
-//            + "        .button { display: inline-block; background-color: #007BFF; color: #ffffff !important; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3); transition: background-color 0.3s ease; }"
-//            + "        .button:hover { background-color: #0056b3; }"
-//            + "        .footer { background-color: #f2f2f2; padding: 20px; text-align: center; font-size: 12px; color: #777777; }"
-//            + "        .footer p { margin: 0; }"
-//            + "        a { color: #007BFF; text-decoration: none; }"
-//            + "        a:hover { text-decoration: underline; }"
-//            + "    </style>"
-//            + "</head>"
-//            + "<body>"
-//            + "    <table role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\">"
-//            + "        <tr><td align=\"center\">"
-//            + "            <table role=\"presentation\" class=\"container\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\">"
-//            + "                <tr><td class=\"header\"><h1>StayNest</h1></td></tr>"
-//            + "                <tr><td class=\"content\">"
-//            + "                    <p>Hi " + tenant.getName() + ",</p>"
-//            + "                    <p>Your booking request for the listing <strong>" + listing.getTitle() + "</strong> has been:</p>"
-//            + "                    <p class=\"status\">" + newStatus + "</p>"
-//            + "                    <p>You can view more details or check other listings in your StayNest dashboard.</p>"
-//            + "                    <div class=\"button-container\">"
-//            + "                        <a href=\"http://localhost:3000/login\" class=\"button\" target=\"_blank\">Go to Dashboard</a>"
-//            + "                    </div>"
-//            + "                    <p>Thank you for using StayNest!<br>The StayNest Team</p>"
-//            + "                </td></tr>"
-//            + "                <tr><td class=\"footer\">"
-//            + "                    <p>&copy; 2025 StayNest. All rights reserved.</p>"
-//            + "                    <p><a href=\"#\" target=\"_blank\">Privacy Policy</a> | <a href=\"#\" target=\"_blank\">Terms of Service</a></p>"
-//            + "                </td></tr>"
-//            + "            </table>"
-//            + "        </td></tr>"
-//            + "    </table>"
-//            + "</body>"
-//            + "</html>";
-//
-//        try {
-//            MimeMessage message = javaMailSender.createMimeMessage();
-//            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-//            helper.setTo(tenant.getEmail());
-//            helper.setSubject(subject);
-//            helper.setText(htmlBody, true);
-//            javaMailSender.send(message);
-//            logger.info("Status update email sent to tenant: {}", tenant.getEmail());
-//        } catch (Exception e) {
-//            logger.error("Failed to send status update email to tenant: {}", e.getMessage());
-//        }
+
         emailService.sendBookingConfirmationEmail(tenant, listing, selectedRoomType, booking);
         
     }

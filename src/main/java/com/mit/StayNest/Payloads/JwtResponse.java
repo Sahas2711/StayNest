@@ -1,4 +1,4 @@
-package com.mit.StayNest.Entity;
+package com.mit.StayNest.Payloads;
 
 import org.springframework.stereotype.Component;
 

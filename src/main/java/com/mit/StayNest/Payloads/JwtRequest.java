@@ -1,4 +1,4 @@
-package com.mit.StayNest.Entity;
+package com.mit.StayNest.Payloads;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
+
+import com.mit.StayNest.Entity.User;
 
 @Component
 public class JwtRequest {
